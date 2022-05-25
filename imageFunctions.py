@@ -1,9 +1,12 @@
 import cv2
-import numpy as np
+
+
+def mirror_img(img):
+    img = img[:, ::-1, :]
+    return img
+
 
 test_img = cv2.imread("testImg.png")
-cv2.imshow("R", test_img[:, :, 2])
-print("Displaying red channel")
-cv2.waitKey(0)
+cv2.imwrite("mirrored.png", mirror_img(test_img))
 
 
