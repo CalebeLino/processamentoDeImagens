@@ -2,6 +2,18 @@ import cv2
 import numpy as np
 
 
+def clone_img(img):
+    clone = np.zeros_like(img)
+
+    for z in range(np.shape(img)[2]):
+        for x in range(np.shape(img)[1]):
+            for y in range(np.shape(img)[0]):
+                clone[y, x, z] = img[y, x, z]
+    cv2.imshow("", clone)
+    cv2.waitKey(0)
+    return clone
+
+
 def midmirror_img(img):
     midmirr = np.zeros_like(img)
 
@@ -39,15 +51,17 @@ def rotate90(img):
     for z in range(np.shape(img)[2]):
         for x in range(np.shape(img)[1]):
             for y in range(np.shape(img)[0]):
-                rotated[x, y, z] = img[x, y, z]
+                rotated[np.shape(img)[0]-1-x, y, z] = img[y, x, z]
     cv2.imshow("", rotated)
-    cv2.waitKey(0)
-    print(img)
+    print(img[:, :, 0])
     print("-------")
-    print(rotated)
+    print(rotated[:, :, 0])
+    cv2.waitKey(0)
 
 
 test_img = cv2.imread("testImg.png")
+cv2.imwrite("clone.png", clone_img(test_img))
+rotate90(test_img)
 cv2.imwrite("reversed.png", reverse_img(test_img))
 cv2.imwrite("centerMirrored.png", midmirror_img(test_img))
 
