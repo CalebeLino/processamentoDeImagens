@@ -161,6 +161,23 @@ def sqrt_img(img):
     return rooted2
 
 
+def sine_img(img, distortion, period):
+    sined = np.zeros_like(img)
+
+    for z in range(np.shape(img)[2]):
+        for y in range(np.shape(img)[0]):
+            for x in range(np.shape(img)[1]):
+                if 0 <= int(np.sin(x*period) * distortion + y) <= np.shape(sined)[0]-1:
+                    sined[int(np.sin(x*period) * distortion + y), x, z] = img[y, x, z]
+
+    cv2.imshow("", sined)
+    print(img)
+    print("-------")
+    print(sined)
+    cv2.waitKey(0)
+    return sined
+
+
 test_img = cv2.imread("testImg.png")
 cv2.imshow("Original", test_img)
 cv2.waitKey(0)
@@ -173,4 +190,4 @@ cv2.imwrite("shadow.png", shadowing(test_img, 100))
 cv2.imwrite("shadowV2.png", shadowing_v2(test_img, 30))
 cv2.imwrite("modded.png", mod_img(test_img, 3))
 cv2.imwrite("sqrt.png", sqrt_img(test_img))
-
+cv2.imwrite("sineWavy.png", sine_img(test_img, 10, 0.1))
