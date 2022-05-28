@@ -1,3 +1,4 @@
+import math
 import cv2
 import numpy as np
 
@@ -178,6 +179,27 @@ def sine_img(img, distortion, period):
     return sined
 
 
+def circle_img(img, radius):
+    circled = clone_img(img)
+
+    for z in range(np.shape(img)[2]):
+        for y in range(int(np.shape(img)[0]/2), np.shape(img)[0]):
+            for x in range(int(np.shape(img)[1]/2), int(np.shape(img)[1]/2) + radius):
+                circle_y = math.floor(np.sqrt(radius ** 2 - (x - int(np.shape(img)[1]/2)) ** 2)) + y
+                if circle_y <= np.shape(circled)[0] - 1:
+                    circled[circle_y, x, z] = img[y, x, z]
+                    circled[circle_y, np.shape(img)[1] - x - 1, z] = img[y, np.shape(img)[1] - x - 1, z]
+                    circled[np.shape(img)[0] - circle_y - 1, x, z] = img[np.shape(img)[0] - y - 1, x, z]
+                    circled[np.shape(img)[0] - circle_y - 1, np.shape(img)[1] - x - 1, z] = img[np.shape(img)[0] - y - 1, np.shape(img)[1] - x - 1, z]
+
+    cv2.imshow("", circled)
+    print(img)
+    print("-------")
+    print(circled)
+    cv2.waitKey(0)
+    return circled
+
+
 test_img = cv2.imread("testImg.png")
 cv2.imshow("Original", test_img)
 cv2.waitKey(0)
@@ -191,3 +213,4 @@ cv2.imwrite("shadowV2.png", shadowing_v2(test_img, 30))
 cv2.imwrite("modded.png", mod_img(test_img, 3))
 cv2.imwrite("sqrt.png", sqrt_img(test_img))
 cv2.imwrite("sineWavy.png", sine_img(test_img, 10, 0.1))
+cv2.imwrite("circled.png", circle_img(test_img, 200))
