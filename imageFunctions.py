@@ -233,6 +233,29 @@ def avg_edge_blur(img):
     return averaged
 
 
+def circle_img2(img, radius):
+    circled2 = clone_img(img)
+
+    for z in range(np.shape(img)[2]):
+        current_radius = 0  # Reset variable radius
+        for y in range(int(np.shape(img)[0]/2), int(np.shape(img)[0]/2) + radius):
+            current_radius += 1     # Increase radius while iterating through radius line length
+            for x in range(int(np.shape(img)[1]/2), int(np.shape(img)[1]/2) + current_radius):
+                circle_y = math.floor(np.sqrt(current_radius ** 2 - (x - int(np.shape(img)[1]/2)) ** 2)) + int(np.shape(img)[0]/2)  # Get 'y' value with the middle as the center of the circle
+                if circle_y < np.shape(circled2)[0]:
+                    circled2[circle_y, x, z] = img[y, x, z]
+                    circled2[circle_y, np.shape(img)[1] - x - 1, z] = img[y, np.shape(img)[1] - x - 1, z]
+                    circled2[np.shape(img)[0] - circle_y - 1, x, z] = img[np.shape(img)[0] - y - 1, x, z]
+                    circled2[np.shape(img)[0] - circle_y - 1, np.shape(img)[1] - x - 1, z] = img[np.shape(img)[0] - y - 1, np.shape(img)[1] - x - 1, z]
+
+    cv2.imshow("", circled2)
+    print(img)
+    print("-------")
+    print(circled2)
+    cv2.waitKey(0)
+    return circled2
+
+
 test_img = cv2.imread("testImg.png")
 cv2.imshow("Original", test_img)
 cv2.waitKey(0)
@@ -248,3 +271,4 @@ cv2.imwrite("sqrt.png", sqrt_img(test_img))
 cv2.imwrite("sineWavy.png", sine_img(test_img, 10, 0.1))
 cv2.imwrite("circled.png", circle_img(test_img, 200))
 cv2.imwrite("avgEdgeBlur.png", avg_edge_blur(test_img))
+cv2.imwrite("halo.png", circle_img2(test_img, 285))
